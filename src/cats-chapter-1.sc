@@ -38,6 +38,7 @@ import cats.syntax.option._
 
 //Comparing custom types
 import java.util.Date
+
 import cats.std.long._
 
 implicit val dateEqual = Eq.instance[Date] { (date1, date2) =>
