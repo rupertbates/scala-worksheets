@@ -1,4 +1,6 @@
 /* Monoids
+A Monoid is an abstraction of the concept of adding or combining.
+
 Formally, a monoid for a type A is:
 • an operation combine with type (A,A)=>A
 • an element empty of type A
@@ -28,14 +30,23 @@ implicit val booleanAndMonoid : Monoid[Boolean] = new Monoid[Boolean]{
   override def combine(x: Boolean, y: Boolean): Boolean = x && y
 }
 
-implicit val booleanOrMonoid : Monoid[Boolean] = new Monoid[Boolean]{
-  override def empty: Boolean = false
-
-  override def combine(x: Boolean, y: Boolean): Boolean = x || y
-}
+//implicit val booleanOrMonoid : Monoid[Boolean] = new Monoid[Boolean]{
+//  override def empty: Boolean = false
+//
+//  override def combine(x: Boolean, y: Boolean): Boolean = x || y
+//}
+//booleanOrMonoid.combine(false, false)
 
 booleanAndMonoid.combine(false, true)
-booleanOrMonoid.combine(false, false)
+
+
+import cats.std.int._
+import cats.syntax.semigroup._
+
+1 |+| 10
+
+true |+| false
+false |+| false
 
 
 
