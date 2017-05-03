@@ -40,7 +40,7 @@ implicit val booleanAndMonoid : Monoid[Boolean] = new Monoid[Boolean]{
 booleanAndMonoid.combine(false, true)
 
 
-import cats.std.int._
+import cats.instances.int._
 import cats.syntax.semigroup._
 
 1 |+| 10

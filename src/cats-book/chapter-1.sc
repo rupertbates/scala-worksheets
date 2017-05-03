@@ -1,6 +1,6 @@
 import cats.Show
-import cats.std.int._
-import cats.std.string._
+import cats.instances.int._
+import cats.instances.string._
 import cats.syntax.show._
 
 //Chapter 1
@@ -26,7 +26,7 @@ import cats.syntax.eq._
 5 === 5
 5 =!= 5
 
-import cats.std.option._
+import cats.instances.option._
 import cats.syntax.option._
 //Eq is invariant Some != Option - cast to Option
 (Some(5) : Option[Int]) === (Some(5) : Option[Int])
@@ -39,7 +39,7 @@ import cats.syntax.option._
 //Comparing custom types
 import java.util.Date
 
-import cats.std.long._
+import cats.instances.long._
 
 implicit val dateEqual = Eq.instance[Date] { (date1, date2) =>
   date1.getTime === date2.getTime
