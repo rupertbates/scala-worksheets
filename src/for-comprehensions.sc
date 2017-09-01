@@ -1,24 +1,46 @@
+import scala.concurrent._
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
 import cats.data.Nested
 import cats.implicits._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+val l = List("a", "b", "c")
 
-val list1 = List(1, 2, 3)
+for {
+  a <- l
+  b <- 11 to 12
+  c <- 13 to 14
+} yield (a, b, c)
 
 
-val result = for {
-  l <- list1
+def sum(f: Int => Int, a: Int, b: Int) = {
+  def loop(a: Int, acc: Int): Int = {
+    if (a > b) acc
+    else loop(a + 1, acc + f(a))
+  }
 
-} yield {
-  l
+  loop(a, 0)
+}
+
+sum((a: Int) => a, 1, 4)
+
+
+val fl = Future.successful(l)
+def listOfList(s: String) = Future.successful(List(s, s, s))
+val nfl = Nested(fl)
+
+val r = nfl.map(listOfList(_))
+//val res = Await.result(nfl.map(listOfList(_)), 10 seconds)
+
+val res = fl.flatMap{
+  list => list.flatMap(listOfList(_))
 }
 
 
-val l: Option[List[Int]] = Some(List(1, 2, 3, 4, 5))
-val f = Future.successful(List(1,2,3))
-val n = Nested(f)
-val nl = Nested(l)
 
-n.map(_ + 1)
-nl.map(_ + 1)
+
+
+
+
+
+
