@@ -1,6 +1,5 @@
 import cats.syntax.applicative._
 import cats.data.{EitherT, OptionT, Writer, WriterT}
-import cats.instances.either._
 import cats.instances.list._
 
 // 1. List[Option]
@@ -16,17 +15,21 @@ result1.flatMap { (x: Int) =>
 }
 
 // 2. Either[String, Option[A]]
-
-// Alias Either to a type constructor with one parameter:
+import cats.instances.either._
 type ErrorOr[A] = Either[String, A]
-// Build our final monad stack using OptionT:
 type ErrorOrOption[A] = OptionT[ErrorOr, A]
 
 val a = 10.pure[ErrorOrOption]
 val b = 32.pure[ErrorOrOption]
 
+// 3. Writer[String, Option[A]]
+import cats.instances.string._
+type Logged[A] = Writer[String, A]
+type OptionWriter[A] = OptionT[Logged, A]
 
-// 3. Future[Either[String, Option[A]]]
+val e = 10.pure[OptionWriter]
+
+// 4. Future[Either[String, Option[A]]]
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -42,14 +45,3 @@ val futureEitherOr: FutureEitherOption[Int] =
   } yield c + d
 
 
-// 4. Future[Writer[String, Option[A]]]
-////import cats.instances.int._
-////import cats._
-////import cats.data._
-//import cats.implicits._
-type Logged[A] = Writer[String, A]
-type OptionWriter[A] = OptionT[Logged, A]
-import cats.syntax.writer._
-import cats.syntax.applicative._
-import cats.instances.vector._
-val e = 10.pure[OptionWriter]
