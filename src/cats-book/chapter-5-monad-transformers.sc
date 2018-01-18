@@ -1,6 +1,9 @@
 import cats.syntax.applicative._
-import cats.data.{EitherT, OptionT, Writer, WriterT}
+import cats.data._
 import cats.instances.list._
+
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 // 1. List[Option]
 
@@ -11,11 +14,13 @@ val result2: ListOption[Int] = 32.pure[ListOption] // result2: ListOption[Int] =
 
 result1.flatMap { (x: Int) =>
   result2.map { (y: Int) =>
-    x+y }
+    x + y
+  }
 }
 
 // 2. Either[String, Option[A]]
 import cats.instances.either._
+
 type ErrorOr[A] = Either[String, A]
 type ErrorOrOption[A] = OptionT[ErrorOr, A]
 
@@ -24,6 +29,7 @@ val b = 32.pure[ErrorOrOption]
 
 // 3. Writer[String, Option[A]]
 import cats.instances.string._
+
 type Logged[A] = Writer[String, A]
 type OptionWriter[A] = OptionT[Logged, A]
 
@@ -38,10 +44,11 @@ import cats.instances.future._ // for Monad
 type FutureEither[A] = EitherT[Future, String, A]
 type FutureEitherOption[A] = OptionT[FutureEither, A]
 
+def get10: FutureEitherOption[Int] = 10.pure[FutureEitherOption]
 val futureEitherOr: FutureEitherOption[Int] =
   for {
-    c <- 10.pure[FutureEitherOption]
+    c <- get10
     d <- 32.pure[FutureEitherOption]
   } yield c + d
 
-
+Await.result(futureEitherOr.value.value, 1 second)
