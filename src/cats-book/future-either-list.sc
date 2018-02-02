@@ -11,7 +11,7 @@ def wrap[A](a: A): EitherT[Future, Error, A] =
 
 case class Error(msg: String)
 
-val et: EitherT[Future, Error, List[Int]] = EitherT.right(Future.successful(List(1, 2, 3)))
+val et: EitherT[Future, Error, List[Int]] = wrap(List(1, 2, 3))
 
 def addOne(l: List[Int]): EitherT[Future, Error, List[Int]] =
   wrap(l.map(_ + 1))
@@ -19,10 +19,15 @@ def addOne(l: List[Int]): EitherT[Future, Error, List[Int]] =
 def sum(l: List[Int]): EitherT[Future, Error, Int] =
   wrap(l.sum)
 
+def log[A](a: A) = println("boo")
+
 val stack = for {
   a <- et
   b <- addOne(a)
-  c <- sum(b)
+  c <- {
+    log(b)
+    sum(b)
+  }
 } yield c
 
 await(stack.value)
