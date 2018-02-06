@@ -4,9 +4,6 @@ import scala.math.pow
 def factorial(n: Double): Double = if (n == 0) 1 else n * factorial(n - 1)
 def mChooseN(m: Double, n: Double) = factorial(m) / (factorial(m - n) * factorial(n))
 
-factorial(10)
-factorial(5)
-mChooseN(10, 5)
 
 // What is the chance of flipping heads exactly 72 times
 // out of 100 with either a fair or a bent coin
@@ -33,9 +30,44 @@ val probabilityOfFairCoin = fairCoin * p / (fairCoin * p + bentCoin * p)
 //And the probability of the bent coin is
 val probabilityOfBentCoin = 1 - probabilityOfFairCoin
 
+/*Question 1. A jewelry store that serves just one customer at a time is concerned about the safety of its isolated customers.
+The store does some research and learns that:
+
+10% of the times that a jewelry store is robbed, a customer is in the store.
+A jewelry store has a customer on average 20% of each 24-hour day.
+The probability that a jewelry store is being robbed (anywhere in the world) is 1 in 2 million.
+
+What is the probability that a robbery will occur while a customer is in the store?
+
+What is known is:
+A: "a customer is in the store," P(A)=0.2
+B: "a robbery is occurring," P(B)=12,000,000
+P(a customer is in the store∣a robbery occurs)=P(A∣B)
+P(A∣B) = 10%
+  What is wanted:
+  P(a robbery occurs∣a customer is in the store)=P(B∣A)
+By the product rule:
+  P(B∣A)=P(A,B)P(A)
+and P(A,B)=P(A∣B)P(B)
+Therefore:
+  P(B∣A)=P(A∣B)*P(B)/P(A)=(0.1)* 120000000 / 2 = 1 / 4000000
+*/
+
+
+val pA = 0.2 //A jewelry store has a customer on average 20% of each 24-hour day.
+val pB = 1d / 2000000 //The probability that a jewelry store is being robbed (anywhere in the world) is 1 in 2 million.
+val pAGivenB = 0.1 //10% of the times that a jewelry store is robbed, a customer is in the store.
+
+val pBGivenA = (pAGivenB * pB) / pA
+
+//2. Question 2
+//If I flip a fair coin, with heads and tails, ten times in a row, what is the
+// probability that I will get exactly six heads?
+val answer2 = probabilityOfSfromN(6, 10, 0.5)
+
 //Question 3. If a coin is bent so that it has a 40% probability of coming up heads,
 //what is the probability of getting exactly 6 heads in 10 throws?
-probabilityOfSfromN(6, 10, 0.4)
+val answer3 = probabilityOfSfromN(6, 10, 0.4)
 
 //Question 4. A bent coin has 40% probability of coming up heads on each independent toss.
 // If I toss the coin ten times, what is the probability that I get at least 8 heads?
@@ -63,4 +95,48 @@ atLeastSFromN(8, 10, 0.4) == result
 probabilityOfSfromN(8, 10, 0.6)
 
 
+//Question 6
+//We have the following information about a new medical test for diagnosing cancer.
+//Before any data are observed, we know that 5% of the population to be tested actually have Cancer.
+//  Of those tested who do have cancer, 90% of them get an accurate test result of “Positive” for cancer.
+// The other 10% get a false test result of “Negative” for Cancer.
+//  Of the people who do not have cancer, 90% of them get an accurate test result of “Negative” for cancer.
+// The other 10% get a false test result of “Positive” for cancer.
+//  What is the conditional probability that I have Cancer, if I get a “Positive” test result for Cancer?
+//
+//Posterior probability:
+//  p(I actually have cancer | receive a “positive” Test)
+//By Bayes Theorem:
+//=(chance of observing a PT if I have cancer) * (prior probability of having cancer) / (marginal likelihood of the observation of a PT)
+//=p(receiving positive test| has cancer) * p(has cancer [before data is observed])p(positive | has cancer) / p(has cancer)+p(positive | no cancer ) + p(no cancer)
+//  = (90%)(5%) / ((90%)(5%) + (10%)(95%)
+//  =32.1%
+
+var likelihoodHaveWithPT =   0.9
+var likelihoodHaventWithPT = 0.1
+var priorProbabilityHave = 0.05
+var priorProbabilityHavent = 0.95
+
+val answer6 = (likelihoodHaveWithPT * priorProbabilityHave) /
+  (likelihoodHaveWithPT * priorProbabilityHave + likelihoodHaventWithPT * priorProbabilityHavent)
+
+// Question 7
+// We have the following information about a new medical test for diagnosing cancer.
+// Before any data are observed, we know that 8% of the population to be tested actually have Cancer.
+
+// Of those tested who do have cancer, 90% of them get an accurate test result of "Positive'' for cancer.
+// The other 10% get a false test result of "Negative'' for Cancer.
+
+// Of the people who do not have cancer, 95% of them get an accurate test result of "Negative'' for cancer.
+// The other 5% get a false test result of "Positive'' for cancer.
+
+// What is the conditional probability that I have cancer, if I get a "Negative'' test result for Cancer?
+
+val likelihoodHaveWithNT = 0.1
+val likelihoodHaventWithNT = 0.95
+priorProbabilityHave = 0.08
+priorProbabilityHavent = 0.92
+
+val answer7 = (likelihoodHaveWithNT * priorProbabilityHave) /
+  (likelihoodHaveWithNT * priorProbabilityHave + likelihoodHaventWithNT * priorProbabilityHavent)
 
